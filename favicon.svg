@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- background -->
+  <rect width="32" height="32" fill="#fafaff"/>
+  <!-- 6-petal geometric flower -->
+  <ellipse cx="16" cy="16" rx="3.5" ry="9" stroke="#a585cc" stroke-width="1"/>
+  <ellipse cx="16" cy="16" rx="3.5" ry="9" stroke="#a585cc" stroke-width="1" transform="rotate(60 16 16)"/>
+  <ellipse cx="16" cy="16" rx="3.5" ry="9" stroke="#a585cc" stroke-width="1" transform="rotate(120 16 16)"/>
+  <!-- inner ring -->
+  <circle cx="16" cy="16" r="4.5" stroke="#c9aee8" stroke-width=".7" fill="none"/>
+  <!-- center -->
+  <circle cx="16" cy="16" r="1.8" fill="#a585cc"/>
+</svg>
