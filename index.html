@@ -515,7 +515,8 @@ document.getElementById('gbSubmit').addEventListener('click',function(){
       document.getElementById('gbBody').value='';
       loadMessages();
     } else {
-      alert('发布失败，请稍后再试。');
+      r.text().then(function(t){alert(t);});
+
     }
   })
   .catch(function(){
