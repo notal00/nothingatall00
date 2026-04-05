@@ -526,37 +526,7 @@ document.getElementById('gbSubmit').addEventListener('click',function(){
 });
 
 loadMessages();
-{
-  messagesEl.querySelectorAll('.message').forEach(function(m){m.remove();});
-  noMsgEl.style.display=messages.length===0?'block':'none';
-  var rev=messages.slice().reverse();
-  rev.forEach(function(m){
-    var d=document.createElement('div');
-    d.className='message';
-    d.innerHTML='<div class="message-header"><span class="message-name">'+esc(m.name)+(m.title?' &nbsp;&middot;&nbsp; <span style="font-style:normal;font-size:12px;color:var(--text-sub)">'+esc(m.title)+'</span>':'')+'</span><span class="message-time">'+m.time+'</span></div><div class="message-body">'+esc(m.body).replace(/\n/g,'<br>')+'</div>';
-    messagesEl.appendChild(d);
-  });
-}
 
-document.getElementById('gbSubmit').addEventListener('click',function(){
-  var name=document.getElementById('gbName').value.trim();
-  var title=document.getElementById('gbTitle').value.trim();
-  var body=document.getElementById('gbBody').value.trim();
-  if(!name||!body){
-    if(!name)document.getElementById('gbName').style.borderColor='var(--purple-mid)';
-    if(!body)document.getElementById('gbBody').style.borderColor='var(--purple-mid)';
-    return;
-  }
-  document.getElementById('gbName').style.borderColor='';
-  document.getElementById('gbBody').style.borderColor='';
-  messages.push({name:name,title:title,body:body,time:fmtTime(new Date())});
-  document.getElementById('gbName').value='';
-  document.getElementById('gbTitle').value='';
-  document.getElementById('gbBody').value='';
-  renderMessages();
-});
-
-renderMessages();
 
   var backTop=document.getElementById('backTop');
 window.addEventListener('scroll',function(){
