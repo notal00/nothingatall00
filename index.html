@@ -180,6 +180,11 @@ footer { margin-top:16px; padding:44px 0 80px; border-top:1px solid var(--border
   .form-row { flex-direction:column; }
   .form-input.name-input { width:100%; }
 }
+
+  .back-top { position:fixed; bottom:36px; right:36px; width:36px; height:36px; border:1px solid var(--border-rule); background:var(--bg); color:var(--purple-mid); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .35s,border-color .25s,color .25s; z-index:100; }
+.back-top.visible { opacity:1; pointer-events:auto; }
+.back-top:hover { border-color:var(--purple-soft); color:var(--purple-deep); }
+
 </style>
 </head>
 <body>
@@ -326,6 +331,8 @@ footer { margin-top:16px; padding:44px 0 80px; border-top:1px solid var(--border
   </footer>
 
 </div>
+
+  <button class="back-top" id="backTop">&#8593;</button>
 
 <script>
 (function(){
@@ -485,6 +492,15 @@ document.getElementById('gbSubmit').addEventListener('click',function(){
 });
 
 renderMessages();
+
+  var backTop=document.getElementById('backTop');
+window.addEventListener('scroll',function(){
+  backTop.classList.toggle('visible',window.scrollY>400);
+});
+backTop.addEventListener('click',function(){
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
 </script>
 </body>
 </html>
