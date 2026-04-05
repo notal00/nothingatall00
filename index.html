@@ -453,15 +453,80 @@ listEl.addEventListener('click',function(e){
 
 worksLabel.innerHTML='Works &nbsp;&mdash;&nbsp; '+WORKS.length+' 篇';
 
-var messages=[];
+var SB_URL='https://zkpctzxyqpiiqxvnmauo.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprcGN0enh5cXBpaXF4dm5tYXVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNDkxNDAsImV4cCI6MjA5MDkyNTE0MH0.Z7WdneCs_vJOblWho1neuMLI86h1FrdNqi6N2-DI4ZQ';
+
 var messagesEl=document.getElementById('messages');
 var noMsgEl=document.getElementById('noMessages');
 
 function pad(n){return String(n).padStart(2,'0');}
-function fmtTime(d){return d.getFullYear()+'.'+pad(d.getMonth()+1)+'.'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-function renderMessages(){
+function fmtTime(str){
+  var d=new Date(str);
+  return d.getFullYear()+'.'+pad(d.getMonth()+1)+'.'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+
+function renderMessages(rows){
+  messagesEl.querySelectorAll('.message').forEach(function(m){m.remove();});
+  noMsgEl.style.display=rows.length===0?'block':'none';
+  rows.forEach(function(m){
+    var d=document.createElement('div');
+    d.className='message';
+    d.innerHTML='<div class="message-header"><span class="message-name">'+esc(m.name)+(m.title?' &nbsp;&middot;&nbsp; <span style="font-style:normal;font-size:12px;color:var(--text-sub)">'+esc(m.title)+'</span>':'')+'</span><span class="message-time">'+fmtTime(m.created_at)+'</span></div><div class="message-body">'+esc(m.body).replace(/\n/g,'<br>')+'</div>';
+    messagesEl.appendChild(d);
+  });
+}
+
+function loadMessages(){
+  fetch(SB_URL+'/rest/v1/messages?order=created_at.desc&limit=50',{
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+  })
+  .then(function(r){return r.json();})
+  .then(function(rows){renderMessages(Array.isArray(rows)?rows:[]);})
+  .catch(function(){renderMessages([]);});
+}
+
+document.getElementById('gbSubmit').addEventListener('click',function(){
+  var name=document.getElementById('gbName').value.trim();
+  var title=document.getElementById('gbTitle').value.trim();
+  var body=document.getElementById('gbBody').value.trim();
+  if(!name||!body){
+    if(!name)document.getElementById('gbName').style.borderColor='var(--purple-mid)';
+    if(!body)document.getElementById('gbBody').style.borderColor='var(--purple-mid)';
+    return;
+  }
+  document.getElementById('gbName').style.borderColor='';
+  document.getElementById('gbBody').style.borderColor='';
+  var btn=document.getElementById('gbSubmit');
+  btn.textContent='发布中…';
+  btn.disabled=true;
+  fetch(SB_URL+'/rest/v1/messages',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({name:name,title:title||null,body:body})
+  })
+  .then(function(r){
+    btn.textContent='发布';
+    btn.disabled=false;
+    if(r.ok){
+      document.getElementById('gbName').value='';
+      document.getElementById('gbTitle').value='';
+      document.getElementById('gbBody').value='';
+      loadMessages();
+    } else {
+      alert('发布失败，请稍后再试。');
+    }
+  })
+  .catch(function(){
+    btn.textContent='发布';
+    btn.disabled=false;
+    alert('网络错误，请稍后再试。');
+  });
+});
+
+loadMessages();
+{
   messagesEl.querySelectorAll('.message').forEach(function(m){m.remove();});
   noMsgEl.style.display=messages.length===0?'block':'none';
   var rev=messages.slice().reverse();
