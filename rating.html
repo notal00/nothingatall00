@@ -339,7 +339,7 @@ function buildRateList(){
         btn.setAttribute('data-star',s);
         btn.addEventListener('mouseenter',function(){ hoverStars(i,s); });
         btn.addEventListener('mouseleave',function(){ resetStars(i); });
-        btn.addEventListener('touchstart',function(e){ e.preventDefault(); hoverStars(i,s); },{ passive:false });
+        btn.addEventListener('touchend',function(e){ e.preventDefault(); submitRating(t,s,i); },{ passive:false });
         btn.addEventListener('click',function(){ submitRating(t,s,i); });
         inputEl.appendChild(btn);
       })(star,title,idx);
